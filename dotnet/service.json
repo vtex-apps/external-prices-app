@@ -1,0 +1,11 @@
+{
+  "stack": "dotnet",
+  "memory": 256,
+  "timeout": 20,
+  "routes": {
+    "GetQuotes": {
+      "path": "/_v/external-prices-app/quote",
+      "public": true
+    }
+  }
+}

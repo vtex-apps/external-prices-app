@@ -1,0 +1,12 @@
+{
+    "custom-prices": {
+      "input": {        
+        "public": ["customSessionKeys"],
+        "profile": ["email"],
+        "checkout": ["orderFormId"]
+      },
+      "output": {
+        "profile": [ "priceTables"]
+      }
+    }
+  }
