@@ -30,13 +30,8 @@ namespace service.Util.Provider.Impl
         private HttpRequestMessage CreateRequest(string url, HttpMethod verb, string body = null)
         {
             var request = new HttpRequestMessage(verb, "") {RequestUri = new Uri(url)};
-
             if (body != null)
                 request.Content = new StringContent(body, Encoding.UTF8, "application/json");
-            request.Headers.ProxyAuthorization = new AuthenticationHeaderValue("bearer", context.Vtex.AuthToken);
-            request.Headers.Add("Authorization", context.Vtex.AuthToken);
-            request.Headers.Add("VtexIdclientAutCookie", context.Vtex.AuthToken);
-            request.Headers.Add("x-vtex-api-appService", "vtex.custom-prices");
             return request;
         }
 
