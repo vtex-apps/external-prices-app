@@ -3,8 +3,8 @@
   "memory": 256,
   "timeout": 20,
   "routes": {
-    "GetQuotes": {
-      "path": "/_v/external-prices-app/quote",
+    "GetPrice": {
+      "path": "/_v/external-prices-app/price",
       "public": true
     }
   }

@@ -4,7 +4,7 @@ using service.Models.DTO;
 
 namespace service.Services
 {
-    public interface IQuoteService
+    public interface IProductService
     {
         Task<Quote> GetPrice(ProductDTO productDTO);
     }

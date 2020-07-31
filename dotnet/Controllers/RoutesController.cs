@@ -2,40 +2,39 @@
 using Vtex.Api.Context;
 using System.Threading.Tasks;
 using System;
-using service.Models;
+using System.IO;
+using System.Net;
+using System.Text;
 using service.Models.DTO;
 using service.Services;
-using service.Services.Impl;
 using service.Util.Provider;
-using service.Util.Provider.Impl;
 
 namespace service.Controllers
 {
     public class RoutesController : Controller
     {
         private readonly IIOServiceContext  _context;
-        private readonly IQuoteService _quoteService;
+        private readonly IProductService _productService;
         private readonly IRequestProvider _requestProvider;
 
-        public RoutesController(IIOServiceContext context, IQuoteService quoteService, IRequestProvider requestProvider)
+        public RoutesController(IIOServiceContext context, IProductService productService, IRequestProvider requestProvider)
         {
             _context = context;
-            _quoteService = quoteService;
+            _productService = productService;
             _requestProvider = requestProvider;
         }
 
-        [HttpGet]
-        private async Task<JsonResult> GetQuotes()
+     public async Task<JsonResult> GetPrice()
         {
             try
             {
-                var productDTO = await _requestProvider.ReadJsonStream<ProductDTO>(Request.Body);
-                var quote = await _quoteService.GetPrice(productDTO);
-                return new JsonResult(new {Message = "Schema created/updated successfully.", Schema = quote}) {StatusCode = 200};
+                var productDTO = await _requestProvider.ReadJsonStream<ProductDTO>(new MemoryStream(Encoding.UTF8.GetBytes("{}")));
+                var quote = await _productService.GetPrice(productDTO);
+                return new JsonResult(new {Message = "Price quoted successfully.", Schema = quote}) {StatusCode = (int)HttpStatusCode.OK};
             }
             catch (Exception ex)
             {
-                _context.Vtex.Logger.Error("RouteController", "SaveSchema", "Error saving schema", ex);
+                _context.Vtex.Logger.Error("RouteController", "GetPrice", "Error finding product price,", ex);
                 return new JsonResult("Unexpected error.") {StatusCode = 500};
             }
         }

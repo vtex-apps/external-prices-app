@@ -3,14 +3,14 @@ using service.Models;
 using service.Models.DTO;
 using service.Services.Remote;
 
-namespace service.Services.Impl
+namespace service.Services
 {
-    public class QuoteService : IQuoteService
+    public class ProductService : IProductService
     {
 
         private readonly IERPService _erpService;
 
-        public QuoteService(IERPService erpService)
+        public ProductService(IERPService erpService)
         {
             _erpService = erpService;
         }

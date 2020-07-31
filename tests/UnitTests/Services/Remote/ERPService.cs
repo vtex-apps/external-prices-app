@@ -3,9 +3,8 @@ using System.Net.Http;
 using Moq;
 using NUnit.Framework;
 using service.Models;
-using service.Services.Remote.Impl;
+using service.Services.Remote;
 using service.Util.Provider;
-using service.Util.Provider.Impl;
 
 namespace UnitTests.Services.Remote
 {

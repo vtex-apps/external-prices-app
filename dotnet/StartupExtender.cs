@@ -1,13 +1,11 @@
+using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using service.Services;
-using service.Services.Impl;
 using service.Services.Remote;
-using service.Services.Remote.Impl;
 using service.Util.Provider;
-using service.Util.Provider.Impl;
 
 namespace Vtex
 {
@@ -24,10 +22,11 @@ namespace Vtex
         // Note that you don't need to call AddControllers() here
         public void ExtendConfigureServices(IServiceCollection services)
         {
+            services.AddHttpClient();
             services.AddControllers().AddNewtonsoftJson();
             services.AddSingleton<IRequestProvider, RequestProvider>();
             services.AddSingleton<IERPService, ERPService>();
-            services.AddSingleton<IQuoteService, QuoteService>();
+            services.AddSingleton<IProductService, ProductService>();
         }
 
         // This method is called inside Startup.Configure() before calling app.UseRouting()

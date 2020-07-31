@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using service.Models;
 using service.Models.DTO;
-using service.Services.Impl;
+using service.Services;
 using service.Services.Remote;
 
 namespace UnitTests.Services
@@ -10,14 +10,14 @@ namespace UnitTests.Services
     [TestFixture]
     public class QuoteServiceTest
     {
-        private QuoteService _quoteService;
+        private ProductService _productService;
         private Mock<IERPService> _erpServiceMock;
 
         [SetUp]
         public void Setup()
         {
             _erpServiceMock = new Mock<IERPService>();
-            _quoteService = new QuoteService(_erpServiceMock.Object);
+            _productService = new ProductService(_erpServiceMock.Object);
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace UnitTests.Services
             var quote = new Quote();
             _erpServiceMock.Setup(x => x.GetPrice(It.IsAny<Product>())).ReturnsAsync(quote);
             
-            var ret = _quoteService.GetPrice(new ProductDTO()).Result;
+            var ret = _productService.GetPrice(new ProductDTO()).Result;
             Assert.AreSame(quote, ret);
         }
         

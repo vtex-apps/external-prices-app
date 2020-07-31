@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Vtex.Api.Context;
 
-namespace service.Util.Provider.Impl
+namespace service.Util.Provider
 {
     public class RequestProvider : IRequestProvider
     {
