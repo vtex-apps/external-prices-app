@@ -12,12 +12,12 @@ namespace service.Util.Provider
 {
     public class RequestProvider : IRequestProvider
     {
-        private readonly IIOServiceContext context;
+        private readonly IIOServiceContext _context;
         private readonly IHttpClientFactory _clientFactory;
 
         public RequestProvider(IIOServiceContext context, IHttpClientFactory clientFactory)
         {
-            this.context = context;
+            _context = context;
             _clientFactory = clientFactory;
         }
 
