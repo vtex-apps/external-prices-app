@@ -1,0 +1,13 @@
+{
+  "name": "external-prices-app",
+  "vendor": "vtex",
+  "version": "0.0.1",
+  "title": "External Prices",
+  "description": "A reference app for consulting external prices.",
+  "builders": {
+    "dotnet": "2.x",
+    "docs": "0.x"
+  },
+  "policies": [],
+  "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
+}
