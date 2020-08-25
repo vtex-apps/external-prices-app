@@ -1,30 +1,37 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using service.Models;
 using service.Util.Exceptions;
 using service.Util.Provider;
-using Vtex.Api.Context;
 using HttpMethod = System.Net.Http.HttpMethod;
 
 namespace service.Services.Remote
 {
-    public class ERPService : IERPService
+    public class ErpService : IErpService
     {
         private readonly IRequestProvider _requestProvider;
-        private readonly IIOServiceContext _context;
 
-        public ERPService(IIOServiceContext context, IRequestProvider requestProvider)
+        public ErpService(IRequestProvider requestProvider)
         {
-            _context = context;
             _requestProvider = requestProvider;
         }
 
-        public async Task<Quote> GetPrice(Product product)
+        public async Task<ErpQuoteDto> GetQuote(ErpQuoteDto erpQuoteDto)
         {
-            using var responseMessage = await _requestProvider.SendAsync(string.Format(Constants.ERPPricesUrl, _context.Vtex.Account), HttpMethod.Post);
+            using var responseMessage =
+                await _requestProvider.SendAsync(string.Format(Constants.ErpPricesUrl), HttpMethod.Post, BuildQueryParams(erpQuoteDto));
             if (!_requestProvider.IsSuccess(responseMessage))
-                throw new InvalidHttpResponseException("Error trying to quote price from the ERP service.", responseMessage.StatusCode);
+                throw new InvalidHttpResponseException("Error trying to quote price from the ERP service.",
+                    responseMessage.StatusCode);
             var stream = await responseMessage.Content.ReadAsStreamAsync();
-            return await _requestProvider.ReadJsonStream<Quote>(stream);
+            return await _requestProvider.ReadJsonStream<ErpQuoteDto>(stream);
+        }
+
+        private Dictionary<string, string> BuildQueryParams(ErpQuoteDto erpQuoteDto)
+        {
+            var json = JsonConvert.SerializeObject(erpQuoteDto);
+            return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
         }
     }
 }

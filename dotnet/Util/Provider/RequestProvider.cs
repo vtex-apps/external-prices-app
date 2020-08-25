@@ -1,38 +1,41 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Vtex.Api.Context;
 
 namespace service.Util.Provider
 {
     public class RequestProvider : IRequestProvider
     {
-        private readonly IIOServiceContext _context;
         private readonly IHttpClientFactory _clientFactory;
+        private readonly ITokenProvider _tokenProvider;
 
-        public RequestProvider(IIOServiceContext context, IHttpClientFactory clientFactory)
+        public RequestProvider(IHttpClientFactory clientFactory, ITokenProvider tokenProvider)
         {
-            _context = context;
             _clientFactory = clientFactory;
+            _tokenProvider = tokenProvider;
         }
 
-        public async Task<HttpResponseMessage> SendAsync(string url, HttpMethod verb, string body = null)
+        public async Task<HttpResponseMessage> SendAsync(string url, HttpMethod verb, Dictionary<string, string> queryParams, string body = null)
         {
-            var requestMessage = CreateRequest(url, verb, body);
+            var requestMessage = CreateRequest(url, verb, queryParams, body);
             return await _clientFactory.CreateClient().SendAsync(requestMessage);
         }
         
-        private HttpRequestMessage CreateRequest(string url, HttpMethod verb, string body = null)
+        private HttpRequestMessage CreateRequest(string url, HttpMethod verb, Dictionary<string, string> queryParams, string body = null)
         {
-            var request = new HttpRequestMessage(verb, "") {RequestUri = new Uri(url)};
-            if (body != null)
-                request.Content = new StringContent(body, Encoding.UTF8, "application/json");
-            return request;
+            var requestMessage = new HttpRequestMessage(verb, "")
+            {
+                RequestUri = BuildUri(url, queryParams),
+                Content = new StringContent(body, Encoding.UTF8, "application/json")
+            };
+            requestMessage.Headers.Add("token", _tokenProvider.GetToken());
+            return requestMessage;
         }
 
         public async Task<T> ReadJsonStream<T>(Stream stream)
@@ -45,6 +48,15 @@ namespace service.Util.Provider
         public bool IsSuccess(HttpResponseMessage responseMessage)
         {
             return responseMessage.IsSuccessStatusCode || responseMessage.StatusCode == HttpStatusCode.NotModified;
-        } 
+        }
+
+        private Uri BuildUri(string url, Dictionary<string, string> queryParams)
+        {
+            var array = (
+                from key in queryParams.Keys
+                select $"{Uri.EscapeDataString(key)}={Uri.EscapeDataString(queryParams[key])}"
+            ).ToArray();
+            return new Uri(url + "?" + string.Join("&", array));
+        }
     }
 }

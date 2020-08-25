@@ -1,4 +1,3 @@
-using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -25,8 +24,9 @@ namespace Vtex
             services.AddHttpClient();
             services.AddControllers().AddNewtonsoftJson();
             services.AddSingleton<IRequestProvider, RequestProvider>();
-            services.AddSingleton<IERPService, ERPService>();
-            services.AddSingleton<IProductService, ProductService>();
+            services.AddSingleton<ITokenProvider, TokenProvider>();
+            services.AddSingleton<IErpService, ErpService>();
+            services.AddSingleton<IProductService, PriceService>();
         }
 
         // This method is called inside Startup.Configure() before calling app.UseRouting()
