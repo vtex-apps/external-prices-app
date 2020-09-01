@@ -13,21 +13,34 @@ namespace service.Services
             _erpService = erpService;
         }
 
-        public async Task<ErpQuoteDto> GetQuote(QuoteDto quoteDto)
+        public async Task<QuoteDto> GetQuote(QuoteDto quoteDto)
         {
-            return await _erpService.GetQuote(ToErpQuoteDto(quoteDto));
+            var erpQuoteDtoReq = ToErpQuoteDto(quoteDto);
+            var erpQuoteDtoResp = await _erpService.GetQuote(erpQuoteDtoReq);
+            return ToQuoteDto(erpQuoteDtoResp);
         }
-
+        
         private ErpQuoteDto ToErpQuoteDto(QuoteDto quoteDto)
         {
             return new ErpQuoteDto
             {
                 Sku = quoteDto.Sku,
                 Quantity = quoteDto.Quantity,
-                Currency = quoteDto.Currency,
-                Email = quoteDto.Email,
                 State = quoteDto.State,
-                OrderType = quoteDto.OrderType
+                OrderType = quoteDto.OrderType,
+                Price = quoteDto.Price,
+            };
+        }
+        
+        private QuoteDto ToQuoteDto(ErpQuoteDto erpQuoteDto)
+        {
+            return new QuoteDto()
+            {
+                Sku = erpQuoteDto.Sku,
+                Quantity = erpQuoteDto.Quantity,
+                State = erpQuoteDto.State,
+                OrderType = erpQuoteDto.OrderType,
+                Price = erpQuoteDto.Price,
             };
         }
     }

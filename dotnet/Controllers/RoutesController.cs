@@ -8,6 +8,7 @@ using System.Web;
 using Newtonsoft.Json;
 using service.Models;
 using service.Services;
+using service.Util.Provider;
 
 namespace service.Controllers
 {
@@ -15,19 +16,23 @@ namespace service.Controllers
     {
         private readonly IIOServiceContext _context;
         private readonly IProductService _productService;
+        private readonly IRequestProvider _requestProvider;
 
-        public RoutesController(IIOServiceContext context, IProductService productService)
+        public RoutesController(IIOServiceContext context, IProductService productService, IRequestProvider requestProvider)
         {
             _context = context;
             _productService = productService;
+            _requestProvider = requestProvider;
         }
 
+        [HttpPost]
         public async Task<JsonResult> GetPrice()
         {
             try
             {
-                var quote = await _productService.GetQuote(BuildQuoteDto());
-                return new JsonResult(new {Message = "Price quoted successfully.", Schema = quote})
+                var quoteDto = await _requestProvider.ReadJsonStream<QuoteDto>(Request.Body);
+                var result = await _productService.GetQuote(quoteDto);
+                return new JsonResult(new {Message = "Price quoted successfully.", Schema = result})
                     {StatusCode = (int) HttpStatusCode.OK};
             }
             catch (JsonSerializationException ex)
@@ -40,14 +45,6 @@ namespace service.Controllers
                 _context.Vtex.Logger.Error("RouteController", "GetPrice", "Error finding product price,", ex);
                 return new JsonResult("Unexpected error.") {StatusCode = (int)HttpStatusCode.InternalServerError};
             }
-        }
-
-        private QuoteDto BuildQuoteDto()
-        {
-            var parameters = HttpUtility.ParseQueryString(HttpContext.Request.QueryString.Value);
-            var parametersDict = parameters.AllKeys.ToDictionary(k => k, k => parameters[k]);
-            var jsonString = JsonConvert.SerializeObject(parametersDict);
-            return JsonConvert.DeserializeObject<QuoteDto>(jsonString);
         }
     }
 }

@@ -9,12 +9,10 @@ namespace service.Models
 
         [DataMember(Name = "quantity")] public string Quantity { get; set; }
 
-        [DataMember(Name = "currency")] public string Currency { get; set; }
-
-        [DataMember(Name = "email")] public string Email { get; set; }
-
         [DataMember(Name = "state")] public string State { get; set; }
-        
+
         [DataMember(Name = "orderType")] public string OrderType { get; set; }
+
+        [DataMember(Name = "price")] public double Price { get; set; }
     }
 }

@@ -5,6 +5,6 @@ namespace service.Services
 {
     public interface IProductService
     {
-        Task<ErpQuoteDto> GetQuote(QuoteDto quoteDto);
+        Task<QuoteDto> GetQuote(QuoteDto quoteDto);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Moq;
+﻿using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using service.Models;
 using service.Services;
@@ -22,11 +23,17 @@ namespace UnitTests.Services
         [Test]
         public void GetPrice_InputValid_ReturnQuote()
         {
-            var quote = new ErpQuoteDto();
+            var quote = new ErpQuoteDto()
+            {
+                State = "RJ"
+            };
             _erpServiceMock.Setup(x => x.GetQuote(It.IsAny<ErpQuoteDto>())).ReturnsAsync(quote);
             
             var ret = _priceService.GetQuote(new QuoteDto()).Result;
-            Assert.AreSame(quote, ret);
+            ret.Should().BeEquivalentTo(new QuoteDto()
+            {
+                State = "RJ"
+            });
         }
         
     }
