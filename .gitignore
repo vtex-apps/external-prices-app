@@ -8,3 +8,4 @@ dotnet-vtex-api/
 dotnet-wrapper/
 wrapper-core/
 wrapper-routing/
+.DS_Store
