@@ -19,19 +19,14 @@ namespace service.Services.Remote
 
         public async Task<ErpQuoteDto> GetQuote(ErpQuoteDto erpQuoteDto)
         {
+            var body = JsonConvert.SerializeObject(erpQuoteDto);
             using var responseMessage =
-                await _requestProvider.SendAsync(string.Format(Constants.ErpPricesUrl), HttpMethod.Post, BuildQueryParams(erpQuoteDto));
+                await _requestProvider.SendAsync(Constants.ErpPricesUrl, HttpMethod.Post, null, body);
             if (!_requestProvider.IsSuccess(responseMessage))
                 throw new InvalidHttpResponseException("Error trying to quote price from the ERP service.",
                     responseMessage.StatusCode);
             var stream = await responseMessage.Content.ReadAsStreamAsync();
             return await _requestProvider.ReadJsonStream<ErpQuoteDto>(stream);
-        }
-
-        private Dictionary<string, string> BuildQueryParams(ErpQuoteDto erpQuoteDto)
-        {
-            var json = JsonConvert.SerializeObject(erpQuoteDto);
-            return JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
         }
     }
 }
