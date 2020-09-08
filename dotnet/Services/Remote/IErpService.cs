@@ -3,8 +3,8 @@ using service.Models;
 
 namespace service.Services.Remote
 {
-    public interface IERPService
+    public interface IErpService
     {
-        Task<Quote> GetPrice(Product product);
+        Task<ErpQuoteDto> GetQuote(ErpQuoteDto erpQuoteDto);
     }
 }

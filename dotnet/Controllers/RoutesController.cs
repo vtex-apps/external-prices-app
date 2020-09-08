@@ -2,10 +2,11 @@
 using Vtex.Api.Context;
 using System.Threading.Tasks;
 using System;
-using System.IO;
+using System.Linq;
 using System.Net;
-using System.Text;
-using service.Models.DTO;
+using System.Web;
+using Newtonsoft.Json;
+using service.Models;
 using service.Services;
 using service.Util.Provider;
 
@@ -13,7 +14,7 @@ namespace service.Controllers
 {
     public class RoutesController : Controller
     {
-        private readonly IIOServiceContext  _context;
+        private readonly IIOServiceContext _context;
         private readonly IProductService _productService;
         private readonly IRequestProvider _requestProvider;
 
@@ -24,18 +25,25 @@ namespace service.Controllers
             _requestProvider = requestProvider;
         }
 
-     public async Task<JsonResult> GetPrice()
+        [HttpPost]
+        public async Task<JsonResult> GetPrice()
         {
             try
             {
-                var productDTO = await _requestProvider.ReadJsonStream<ProductDTO>(new MemoryStream(Encoding.UTF8.GetBytes("{}")));
-                var quote = await _productService.GetPrice(productDTO);
-                return new JsonResult(new {Message = "Price quoted successfully.", Schema = quote}) {StatusCode = (int)HttpStatusCode.OK};
+                var quoteDto = await _requestProvider.ReadJsonStream<QuoteDto>(Request.Body);
+                var result = await _productService.GetQuote(quoteDto);
+                return new JsonResult(new {Message = "Price quoted successfully.", Schema = result})
+                    {StatusCode = (int) HttpStatusCode.OK};
+            }
+            catch (JsonSerializationException ex)
+            {
+                _context.Vtex.Logger.Error("RouteController", "GetPrice", "Error finding product price,", ex);
+                return new JsonResult("One or more query parameters are invalid.") {StatusCode = (int)HttpStatusCode.BadRequest};
             }
             catch (Exception ex)
             {
                 _context.Vtex.Logger.Error("RouteController", "GetPrice", "Error finding product price,", ex);
-                return new JsonResult("Unexpected error.") {StatusCode = 500};
+                return new JsonResult("Unexpected error.") {StatusCode = (int)HttpStatusCode.InternalServerError};
             }
         }
     }
