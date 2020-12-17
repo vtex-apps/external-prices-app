@@ -49,14 +49,5 @@ namespace service.Controllers
                 return new JsonResult("Unexpected error.") {StatusCode = (int) HttpStatusCode.InternalServerError};
             }
         }
-
-        private async Task<string> GetRequestBody()
-        {
-            using var sr = new StreamReader(Request.Body);
-            var body = await sr.ReadToEndAsync();
-            if (string.IsNullOrWhiteSpace(body)) Console.WriteLine("error");
-            // throw new InvalidHttpParameterException("You must provide a valid body.", "request body");
-            return body;
-        }
     }
 }
