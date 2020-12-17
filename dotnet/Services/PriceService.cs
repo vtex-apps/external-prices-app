@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
 using service.Models;
 using service.Services.Remote;
 
@@ -16,10 +18,10 @@ namespace service.Services
         public async Task<QuoteDto> GetQuote(QuoteDto quoteDto)
         {
             var erpQuoteDtoReq = ToErpQuoteDto(quoteDto);
-            var erpQuoteDtoResp = await _erpService.GetQuote(erpQuoteDtoReq);
+            var erpQuoteDtoResp = await _erpService.GetMockedQuote(erpQuoteDtoReq);
             return ToQuoteDto(erpQuoteDtoResp);
         }
-        
+
         private ErpQuoteDto ToErpQuoteDto(QuoteDto quoteDto)
         {
             return new ErpQuoteDto
@@ -31,7 +33,7 @@ namespace service.Services
                 Price = quoteDto.Price,
             };
         }
-        
+
         private QuoteDto ToQuoteDto(ErpQuoteDto erpQuoteDto)
         {
             return new QuoteDto()
