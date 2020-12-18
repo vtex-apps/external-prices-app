@@ -25,7 +25,7 @@ namespace Vtex
             services.AddControllers().AddNewtonsoftJson();
             services.AddSingleton<IRequestProvider, RequestProvider>();
             services.AddSingleton<ITokenProvider, TokenProvider>();
-            services.AddSingleton<IErpService, ErpService>();
+            services.AddSingleton<IErpService, ErpMockedService>();
             services.AddSingleton<IProductService, PriceService>();
         }
 
