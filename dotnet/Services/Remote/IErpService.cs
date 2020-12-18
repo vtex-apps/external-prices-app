@@ -6,6 +6,5 @@ namespace service.Services.Remote
     public interface IErpService
     {
         Task<ErpQuoteDto> GetQuote(ErpQuoteDto erpQuoteDto);
-        Task<ErpQuoteDto> GetMockedQuote(ErpQuoteDto erpQuoteDto);
     }
 }

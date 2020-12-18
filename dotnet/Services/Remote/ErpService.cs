@@ -20,7 +20,6 @@ namespace service.Services.Remote
 
         public async Task<ErpQuoteDto> GetQuote(ErpQuoteDto erpQuoteDto)
         {
-            Console.WriteLine("here");
             var body = JsonConvert.SerializeObject(erpQuoteDto);
             using var responseMessage =
                 await _requestProvider.SendAsync(Constants.ErpPricesUrl, HttpMethod.Post, null, body);
@@ -29,18 +28,6 @@ namespace service.Services.Remote
                     responseMessage.StatusCode);
             var stream = await responseMessage.Content.ReadAsStreamAsync();
             return await _requestProvider.ReadJsonStream<ErpQuoteDto>(stream);
-        }
-
-        public async Task<ErpQuoteDto> GetMockedQuote(ErpQuoteDto erpQuoteDto)
-        {
-            return new ErpQuoteDto
-            {
-                Sku = erpQuoteDto.Sku,
-                Quantity = erpQuoteDto.Quantity,
-                State = erpQuoteDto.State,
-                OrderType = erpQuoteDto.OrderType,
-                Price = erpQuoteDto.Price / 100 * int.Parse(erpQuoteDto.Sku),
-            };
         }
     }
 }

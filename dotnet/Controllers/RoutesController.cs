@@ -28,25 +28,22 @@ namespace service.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetPrice([FromBody] QuoteDto quoteDto)
+        public async Task<ActionResult> GetPrice([FromBody] QuoteDto quoteDto)
         {
             try
             {
                 var result = await _productService.GetQuote(quoteDto);
-                return new JsonResult(new {Message = "Price quoted successfully.", Schema = result})
-                    {StatusCode = (int) HttpStatusCode.OK};
+                return Ok(new {Message = "Price quoted successfully.", Schema = result});
             }
             catch (JsonSerializationException ex)
             {
                 _context.Vtex.Logger.Error("RouteController", "GetPrice", "Error finding product price,", ex);
-                return new JsonResult("One or more query parameters are invalid.")
-                    {StatusCode = (int) HttpStatusCode.BadRequest};
+                return BadRequest("One or more query parameters are invalid.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
                 _context.Vtex.Logger.Error("RouteController", "GetPrice", "Error finding product price,", ex);
-                return new JsonResult("Unexpected error.") {StatusCode = (int) HttpStatusCode.InternalServerError};
+                return Problem("Unexpected error.");
             }
         }
     }

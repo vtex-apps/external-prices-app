@@ -18,7 +18,7 @@ namespace service.Services
         public async Task<QuoteDto> GetQuote(QuoteDto quoteDto)
         {
             var erpQuoteDtoReq = ToErpQuoteDto(quoteDto);
-            var erpQuoteDtoResp = await _erpService.GetMockedQuote(erpQuoteDtoReq);
+            var erpQuoteDtoResp = await _erpService.GetQuote(erpQuoteDtoReq);
             return ToQuoteDto(erpQuoteDtoResp);
         }
 
