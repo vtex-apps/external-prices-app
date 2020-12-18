@@ -26,6 +26,12 @@ namespace service.Controllers
             _productService = productService;
             _requestProvider = requestProvider;
         }
+        
+        [HttpGet]
+        public async Task<ActionResult> HealthCheck()
+        {
+            return Ok();
+        }
 
         [HttpPost]
         public async Task<ActionResult> GetPrice([FromBody] QuoteDto quoteDto)
