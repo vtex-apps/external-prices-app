@@ -2,6 +2,7 @@
 using Vtex.Api.Context;
 using System.Threading.Tasks;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -18,7 +19,8 @@ namespace service.Controllers
         private readonly IProductService _productService;
         private readonly IRequestProvider _requestProvider;
 
-        public RoutesController(IIOServiceContext context, IProductService productService, IRequestProvider requestProvider)
+        public RoutesController(IIOServiceContext context, IProductService productService,
+            IRequestProvider requestProvider)
         {
             _context = context;
             _productService = productService;
@@ -26,24 +28,22 @@ namespace service.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> GetPrice()
+        public async Task<ActionResult> GetPrice([FromBody] QuoteDto quoteDto)
         {
             try
             {
-                var quoteDto = await _requestProvider.ReadJsonStream<QuoteDto>(Request.Body);
                 var result = await _productService.GetQuote(quoteDto);
-                return new JsonResult(new {Message = "Price quoted successfully.", Schema = result})
-                    {StatusCode = (int) HttpStatusCode.OK};
+                return Ok(new {Message = "Price quoted successfully.", Schema = result});
             }
             catch (JsonSerializationException ex)
             {
                 _context.Vtex.Logger.Error("RouteController", "GetPrice", "Error finding product price,", ex);
-                return new JsonResult("One or more query parameters are invalid.") {StatusCode = (int)HttpStatusCode.BadRequest};
+                return BadRequest("One or more query parameters are invalid.");
             }
             catch (Exception ex)
             {
                 _context.Vtex.Logger.Error("RouteController", "GetPrice", "Error finding product price,", ex);
-                return new JsonResult("Unexpected error.") {StatusCode = (int)HttpStatusCode.InternalServerError};
+                return Problem("Unexpected error.");
             }
         }
     }
