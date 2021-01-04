@@ -7,7 +7,6 @@ using service.Models.Request;
 using service.Models.HealthCheck;
 using service.Models.Price;
 using service.Services;
-using service.Util.Provider;
 
 namespace service.Controllers
 {
@@ -15,14 +14,11 @@ namespace service.Controllers
     {
         private readonly IIOServiceContext _context;
         private readonly IProductService _productService;
-        private readonly IRequestProvider _requestProvider;
 
-        public RoutesController(IIOServiceContext context, IProductService productService,
-            IRequestProvider requestProvider)
+        public RoutesController(IIOServiceContext context, IProductService productService)
         {
             _context = context;
             _productService = productService;
-            _requestProvider = requestProvider;
         }
 
         [HttpGet]
