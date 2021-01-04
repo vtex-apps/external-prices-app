@@ -26,11 +26,9 @@ namespace service.Services
         {
             return new ErpQuoteDto
             {
-                Sku = quoteDto.Sku,
+                SkuId = quoteDto.SkuId,
                 Quantity = quoteDto.Quantity,
-                State = quoteDto.State,
-                OrderType = quoteDto.OrderType,
-                Price = quoteDto.Price,
+                Price = quoteDto.Price
             };
         }
 
@@ -38,11 +36,9 @@ namespace service.Services
         {
             return new QuoteDto()
             {
-                Sku = erpQuoteDto.Sku,
+                SkuId = erpQuoteDto.SkuId,
                 Quantity = erpQuoteDto.Quantity,
-                State = erpQuoteDto.State,
-                OrderType = erpQuoteDto.OrderType,
-                Price = erpQuoteDto.Price,
+                Price = erpQuoteDto.Price
             };
         }
     }

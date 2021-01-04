@@ -26,20 +26,20 @@ namespace service.Controllers
             _productService = productService;
             _requestProvider = requestProvider;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult> HealthCheck()
         {
-            return Ok();
+            return Ok(new {Installed = true});
         }
 
         [HttpPost]
-        public async Task<ActionResult> GetPrice([FromBody] QuoteDto quoteDto)
+        public async Task<ActionResult> GetPrice([FromBody] Request request)
         {
             try
             {
-                var result = await _productService.GetQuote(quoteDto);
-                return Ok(new {Message = "Price quoted successfully.", Schema = result});
+                var result = await _productService.GetQuote(request.Item);
+                return Ok(new {Message = "Price quoted successfully.", Item = result});
             }
             catch (JsonSerializationException ex)
             {

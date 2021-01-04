@@ -9,11 +9,11 @@ namespace service.Services.Remote
         {
             return new ErpQuoteDto
             {
-                Sku = erpQuoteDto.Sku,
+                SkuId = erpQuoteDto.SkuId,
                 Quantity = erpQuoteDto.Quantity,
                 State = erpQuoteDto.State,
                 OrderType = erpQuoteDto.OrderType,
-                Price = erpQuoteDto.Price / 100 * int.Parse(erpQuoteDto.Sku),
+                Price = int.Parse(erpQuoteDto.SkuId) * 10,
             };
         }
     }

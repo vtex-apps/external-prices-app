@@ -5,10 +5,9 @@ namespace service.Models
     [DataContract]
     public class ErpQuoteDto
     {
-        [DataMember(Name = "sku")] public string Sku { get; set; }
+        [DataMember(Name = "skuId")] public string SkuId { get; set; }
 
-        [DataMember(Name = "quantity")] public string Quantity { get; set; }
-
+        [DataMember(Name = "quantity")] public int Quantity { get; set; }
         [DataMember(Name = "state")] public string State { get; set; }
 
         [DataMember(Name = "orderType")] public string OrderType { get; set; }
