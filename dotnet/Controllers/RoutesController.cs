@@ -2,12 +2,10 @@
 using Vtex.Api.Context;
 using System.Threading.Tasks;
 using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Web;
 using Newtonsoft.Json;
-using service.Models;
+using service.Models.Request;
+using service.Models.HealthCheck;
+using service.Models.Price;
 using service.Services;
 using service.Util.Provider;
 
@@ -30,7 +28,7 @@ namespace service.Controllers
         [HttpGet]
         public async Task<ActionResult> HealthCheck()
         {
-            return Ok(new {Installed = true});
+            return Ok(new HealthCheckResponse());
         }
 
         [HttpPost]
@@ -39,7 +37,7 @@ namespace service.Controllers
             try
             {
                 var result = await _productService.GetQuote(request.Item);
-                return Ok(new {Message = "Price quoted successfully.", Item = result});
+                return Ok(new PriceResponse(result));
             }
             catch (JsonSerializationException ex)
             {
