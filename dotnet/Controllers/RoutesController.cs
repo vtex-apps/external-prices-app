@@ -32,6 +32,7 @@ namespace service.Controllers
         {
             try
             {
+                Console.WriteLine(JsonConvert.SerializeObject(request));
                 var result = await _productService.GetQuote(request.Item);
                 return Ok(new PriceResponse(result));
             }
@@ -42,6 +43,7 @@ namespace service.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 _context.Vtex.Logger.Error("RouteController", "GetPrice", "Error finding product price,", ex);
                 return Problem("Unexpected error.");
             }

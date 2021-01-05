@@ -5,9 +5,9 @@ namespace service.Models.Request
     [DataContract]
     public class Request
     {
-        public QuoteDto Item { get; set; }
+        [DataMember(Name = "item")] public QuoteDto Item { get; set; }
 
         //TODO implement get function with session parameters - custom session keys
-        public RequestContext Context { get; set; }
+        [DataMember(Name = "context")] public RequestContext Context { get; set; }
     }
 }
