@@ -3,7 +3,7 @@ using Vtex.Api.Context;
 using System.Threading.Tasks;
 using System;
 using Newtonsoft.Json;
-using service.Models.Request;
+using service.Factory;
 using service.Models.HealthCheck;
 using service.Models.Price;
 using service.Services;
@@ -28,13 +28,12 @@ namespace service.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> GetPrice([FromBody] Request request)
+        public async Task<ActionResult> GetPrice([FromBody] PriceRequest request)
         {
             try
             {
-                Console.WriteLine(JsonConvert.SerializeObject(request));
                 var result = await _productService.GetQuote(request.Item);
-                return Ok(new PriceResponse(result));
+                return Ok(new PriceResponse(PriceResponseItemFactory.BuildFrom(result)));
             }
             catch (JsonSerializationException ex)
             {
@@ -43,7 +42,6 @@ namespace service.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
                 _context.Vtex.Logger.Error("RouteController", "GetPrice", "Error finding product price,", ex);
                 return Problem("Unexpected error.");
             }

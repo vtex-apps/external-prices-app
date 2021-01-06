@@ -5,13 +5,13 @@ namespace service.Models.Price
     [DataContract]
     public class PriceResponse
     {
-        public PriceResponse(QuoteDto quoteDto)
+        public PriceResponse(PriceResponseItem priceResponseItem)
         {
-            Item = quoteDto;
+            Item = priceResponseItem;
             Message = "Price quoted successfully.";
         }
 
         [DataMember(Name = "message")] public string Message { get; set; }
-        [DataMember(Name = "item")] public QuoteDto Item { get; set; }
+        [DataMember(Name = "item")] public PriceResponseItem Item { get; set; }
     }
 }

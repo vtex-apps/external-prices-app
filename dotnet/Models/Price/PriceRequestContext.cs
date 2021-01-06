@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace service.Models.Request
+namespace service.Models.Price
 {
     [DataContract]
-    public class RequestContext
+    public class PriceRequestContext
     {
         [DataMember(Name = "email")] public string Email { get; set; }
 

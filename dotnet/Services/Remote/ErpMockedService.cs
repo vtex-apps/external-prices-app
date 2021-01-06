@@ -10,9 +10,6 @@ namespace service.Services.Remote
             return new ErpQuoteDto
             {
                 SkuId = erpQuoteDto.SkuId,
-                Quantity = erpQuoteDto.Quantity,
-                State = erpQuoteDto.State,
-                OrderType = erpQuoteDto.OrderType,
                 Price = int.Parse(erpQuoteDto.SkuId) * 10,
             };
         }
