@@ -18,7 +18,7 @@ namespace service.Factory
             return new QuoteDto
             {
                 Index = initialQuoteDto.Index,
-                SkuId = initialQuoteDto.SkuId,
+                SkuId = updatedQuoteDto.SkuId,
                 Price = updatedQuoteDto.Price
             };
         }
