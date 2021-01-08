@@ -2,14 +2,11 @@
 using Vtex.Api.Context;
 using System.Threading.Tasks;
 using System;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Web;
 using Newtonsoft.Json;
-using service.Models;
+using service.Factory;
+using service.Models.HealthCheck;
+using service.Models.Price;
 using service.Services;
-using service.Util.Provider;
 
 namespace service.Controllers
 {
@@ -17,29 +14,26 @@ namespace service.Controllers
     {
         private readonly IIOServiceContext _context;
         private readonly IProductService _productService;
-        private readonly IRequestProvider _requestProvider;
 
-        public RoutesController(IIOServiceContext context, IProductService productService,
-            IRequestProvider requestProvider)
+        public RoutesController(IIOServiceContext context, IProductService productService)
         {
             _context = context;
             _productService = productService;
-            _requestProvider = requestProvider;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult> HealthCheck()
         {
-            return Ok();
+            return Ok(new HealthCheckResponse());
         }
 
         [HttpPost]
-        public async Task<ActionResult> GetPrice([FromBody] QuoteDto quoteDto)
+        public async Task<ActionResult> GetPrice([FromBody] PriceRequest request)
         {
             try
             {
-                var result = await _productService.GetQuote(quoteDto);
-                return Ok(new {Message = "Price quoted successfully.", Schema = result});
+                var result = await _productService.GetQuote(request.Item);
+                return Ok(new PriceResponse(PriceResponseItemFactory.BuildFrom(result)));
             }
             catch (JsonSerializationException ex)
             {

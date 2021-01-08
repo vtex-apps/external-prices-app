@@ -1,18 +1,14 @@
-﻿using System.Runtime.Serialization;
+﻿using System;
+using System.Runtime.Serialization;
+using System.Collections.Generic;
 
 namespace service.Models
 {
     [DataContract]
     public class QuoteDto
     {
-        [DataMember(Name = "sku")] public string Sku { get; set; }
-
-        [DataMember(Name = "quantity")] public string Quantity { get; set; }
-
-        [DataMember(Name = "state")] public string State { get; set; }
-        
-        [DataMember(Name = "orderType")] public string OrderType { get; set; }
-        
+        [DataMember(Name = "index")] public int Index { get; set; }
+        [DataMember(Name = "skuId")] public string SkuId { get; set; }
         [DataMember(Name = "price")] public double Price { get; set; }
     }
 }

@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 using Moq;
-using Newtonsoft.Json;
 using NUnit.Framework;
 using service.Controllers;
 using service.Models;
+using service.Models.Price;
 using service.Services;
 using service.Util.Provider;
 
@@ -18,7 +14,6 @@ namespace UnitTests.Controller
     [TestFixture]
     public class RoutesControllerTest
     {
-        
         private Mock<IProductService> _productServiceMock;
         private RoutesController _routesController;
         private Mock<IRequestProvider> _requestProvider;
@@ -28,7 +23,8 @@ namespace UnitTests.Controller
         {
             _productServiceMock = new Mock<IProductService>();
             _requestProvider = new Mock<IRequestProvider>();
-            _routesController = new RoutesController(null, _productServiceMock.Object, _requestProvider.Object);
+
+            _routesController = new RoutesController(null, _productServiceMock.Object);
             _routesController.ControllerContext = new ControllerContext();
             _routesController.ControllerContext.HttpContext = new DefaultHttpContext();
         }
@@ -36,18 +32,29 @@ namespace UnitTests.Controller
         [Test]
         public void GetPrice_InputValid_ReturnQuote()
         {
-            
-            var quoteDtoReq = new QuoteDto();
-            var body = new MemoryStream(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(quoteDtoReq)));
-            _routesController.ControllerContext.HttpContext.Request.Body = body;
-            _requestProvider.Setup(x => x.ReadJsonStream<QuoteDto>(body)).ReturnsAsync(quoteDtoReq);
-            
+            var request = new PriceRequest
+            {
+                Item = new QuoteDto()
+            };
+
             var quoteDtoResp = new QuoteDto();
-            _productServiceMock.Setup(x => x.GetQuote(quoteDtoReq)).ReturnsAsync(quoteDtoResp);
-            
-            var ret = _routesController.GetPrice().Result;
-            Assert.AreEqual(ret.StatusCode, (int)HttpStatusCode.OK);
+            _productServiceMock.Setup(x => x.GetQuote(request.Item)).ReturnsAsync(quoteDtoResp);
+            var result = _routesController.GetPrice(request).Result as ObjectResult;
+            Assert.AreEqual(result?.StatusCode, (int) HttpStatusCode.OK);
         }
-        
+
+        [Test]
+        public void HealthCheck_ReturnSuccess()
+        {
+            var request = new PriceRequest
+            {
+                Item = new QuoteDto()
+            };
+
+            var quoteDtoResp = new QuoteDto();
+            _productServiceMock.Setup(x => x.GetQuote(request.Item)).ReturnsAsync(quoteDtoResp);
+            var result = _routesController.HealthCheck().Result as ObjectResult;
+            Assert.AreEqual(result?.StatusCode, (int) HttpStatusCode.OK);
+        }
     }
 }

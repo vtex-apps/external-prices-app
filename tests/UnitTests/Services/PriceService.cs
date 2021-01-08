@@ -25,14 +25,14 @@ namespace UnitTests.Services
         {
             var quote = new ErpQuoteDto()
             {
-                State = "RJ"
+                SkuId = "SKU_ID"
             };
             _erpServiceMock.Setup(x => x.GetQuote(It.IsAny<ErpQuoteDto>())).ReturnsAsync(quote);
             
             var ret = _priceService.GetQuote(new QuoteDto()).Result;
             ret.Should().BeEquivalentTo(new QuoteDto()
             {
-                State = "RJ"
+                SkuId = "SKU_ID"
             });
         }
         
